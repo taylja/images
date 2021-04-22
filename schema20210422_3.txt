@@ -1,0 +1,2474 @@
+CREATE SCHEMA sf_schema
+    AUTHORIZATION postgres;
+
+GRANT ALL ON SCHEMA sf_schema TO PUBLIC;
+
+GRANT ALL ON SCHEMA sf_schema TO postgres;
+
+ALTER DEFAULT PRIVILEGES IN SCHEMA sf_schema
+GRANT ALL ON TABLES TO PUBLIC;
+
+
+/* *** Sequences *** */
+
+-- SEQUENCE: sf_schema.contact_id_seq
+-- DROP SEQUENCE sf_schema.contact_id_seq;
+
+CREATE SEQUENCE sf_schema.contact_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+ALTER SEQUENCE sf_schema.contact_id_seq
+    OWNER TO postgres;
+
+-- SEQUENCE: sf_schema.customer_id_seq
+-- DROP SEQUENCE sf_schema.customer_id_seq;
+
+CREATE SEQUENCE sf_schema.customer_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+ALTER SEQUENCE sf_schema.customer_id_seq
+    OWNER TO postgres;
+
+-- SEQUENCE: sf_schema.dependency_id_seq
+-- DROP SEQUENCE sf_schema.dependency_id_seq;
+
+CREATE SEQUENCE sf_schema.dependency_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+ALTER SEQUENCE sf_schema.dependency_id_seq
+    OWNER TO postgres;
+
+-- SEQUENCE: sf_schema.list_state_id_seq
+-- DROP SEQUENCE sf_schema.list_state_id_seq;
+
+CREATE SEQUENCE sf_schema.list_state_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+ALTER SEQUENCE sf_schema.list_state_id_seq
+    OWNER TO postgres;
+
+-- SEQUENCE: sf_schema.list_tools_id_seq
+-- DROP SEQUENCE sf_schema.list_tools_id_seq;
+
+CREATE SEQUENCE sf_schema.list_tools_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+ALTER SEQUENCE sf_schema.list_tools_id_seq
+    OWNER TO postgres;
+
+-- SEQUENCE: sf_schema.person_id_seq
+-- DROP SEQUENCE sf_schema.person_id_seq;
+
+CREATE SEQUENCE sf_schema.person_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+ALTER SEQUENCE sf_schema.person_id_seq
+    OWNER TO postgres;
+
+-- SEQUENCE: sf_schema.process_id_seq
+-- DROP SEQUENCE sf_schema.process_id_seq;
+
+CREATE SEQUENCE sf_schema.process_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+ALTER SEQUENCE sf_schema.process_id_seq
+    OWNER TO postgres;
+
+-- SEQUENCE: sf_schema.program_id_seq
+-- DROP SEQUENCE sf_schema.program_id_seq;
+
+CREATE SEQUENCE sf_schema.program_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+ALTER SEQUENCE sf_schema.program_id_seq
+    OWNER TO postgres;
+
+-- SEQUENCE: sf_schema.project_id_seq
+-- DROP SEQUENCE sf_schema.project_id_seq;
+
+CREATE SEQUENCE sf_schema.project_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+ALTER SEQUENCE sf_schema.project_id_seq
+    OWNER TO postgres;
+
+-- SEQUENCE: sf_schema.release_id_seq
+-- DROP SEQUENCE sf_schema.release_id_seq;
+
+CREATE SEQUENCE sf_schema.release_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+ALTER SEQUENCE sf_schema.release_id_seq
+    OWNER TO postgres;
+
+-- SEQUENCE: sf_schema.role_id_seq
+-- DROP SEQUENCE sf_schema.role_id_seq;
+
+CREATE SEQUENCE sf_schema.role_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+ALTER SEQUENCE sf_schema.role_id_seq
+    OWNER TO postgres;
+-- SEQUENCE: sf_schema.skill_id_seq
+-- DROP SEQUENCE sf_schema.skill_id_seq;
+
+CREATE SEQUENCE sf_schema.skill_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+ALTER SEQUENCE sf_schema.skill_id_seq
+    OWNER TO postgres;
+
+-- SEQUENCE: sf_schema.team_id_seq
+-- DROP SEQUENCE sf_schema.team_id_seq;
+
+CREATE SEQUENCE sf_schema.team_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+ALTER SEQUENCE sf_schema.team_id_seq
+    OWNER TO postgres;
+
+/*********************/
+/* *** System Tables *** */
+/*********************/
+-- Table: sf_schema.program
+-- DROP TABLE sf_schema.program;
+
+CREATE TABLE sf_schema.program
+(
+    id bigint NOT NULL DEFAULT nextval('sf_schema.program_id_seq'::regclass),
+    name text COLLATE pg_catalog."default" NOT NULL,
+    budget numeric(10,2) NOT NULL,
+    date_start timestamp without time zone,
+    date_end timestamp without time zone,
+    comment text COLLATE pg_catalog."default",
+    CONSTRAINT pk_program PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE sf_schema.program
+    OWNER to postgres;
+
+GRANT ALL ON TABLE sf_schema.program TO postgres;
+GRANT ALL ON TABLE sf_schema.program TO PUBLIC;-- Table: sf_schema.project
+
+-- Table: sf_schema.project
+-- DROP TABLE sf_schema.project;
+
+CREATE TABLE sf_schema.project
+(
+    id bigint NOT NULL DEFAULT nextval('sf_schema.project_id_seq'::regclass),
+    name text COLLATE pg_catalog."default" NOT NULL,
+    program_id bigint NOT NULL,
+    date_start timestamp without time zone,
+    date_end timestamp without time zone,
+    total_cost numeric(10,2),
+    comment text COLLATE pg_catalog."default",
+    CONSTRAINT pk_project PRIMARY KEY (id),
+    CONSTRAINT fk_project_program FOREIGN KEY (program_id)
+        REFERENCES sf_schema.program (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE sf_schema.project
+    OWNER to postgres;
+
+GRANT ALL ON TABLE sf_schema.project TO postgres;
+GRANT ALL ON TABLE sf_schema.project TO PUBLIC;
+
+-- Table: sf_schema.release
+-- DROP TABLE sf_schema.release;
+
+CREATE TABLE sf_schema.release
+(
+    id bigint NOT NULL DEFAULT nextval('sf_schema.release_id_seq'::regclass),
+    name text COLLATE pg_catalog."default" NOT NULL,
+    date timestamp without time zone NOT NULL,
+    program_id bigint NOT NULL,
+    CONSTRAINT pk_release PRIMARY KEY (id),
+    CONSTRAINT fk_release_program FOREIGN KEY (program_id)
+        REFERENCES sf_schema.program (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE sf_schema.release
+    OWNER to postgres;
+
+GRANT ALL ON TABLE sf_schema.release TO postgres;
+GRANT ALL ON TABLE sf_schema.release TO PUBLIC;
+
+-- Table: sf_schema.list_state
+-- DROP TABLE sf_schema.list_state;
+
+CREATE TABLE sf_schema.list_state
+(
+    id bigint NOT NULL DEFAULT nextval('sf_schema.list_state_id_seq'::regclass),
+    name character varying(35) COLLATE pg_catalog."default",
+    CONSTRAINT pk_list_state PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE sf_schema.list_state
+    OWNER to postgres;
+
+GRANT ALL ON TABLE sf_schema.list_state TO postgres;
+GRANT ALL ON TABLE sf_schema.list_state TO PUBLIC;
+
+-- Table: sf_schema.list_tool
+-- DROP TABLE sf_schema.list_tool;
+
+CREATE TABLE sf_schema.list_tool
+(
+    id bigint NOT NULL DEFAULT nextval('sf_schema.list_tools_id_seq'::regclass),
+    name text COLLATE pg_catalog."default" NOT NULL,
+    location text COLLATE pg_catalog."default",
+    cost numeric(10,2),
+    comment text COLLATE pg_catalog."default",
+    CONSTRAINT pk_list_tool PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE sf_schema.list_tool
+    OWNER to postgres;
+
+GRANT ALL ON TABLE sf_schema.list_tool TO postgres;
+GRANT ALL ON TABLE sf_schema.list_tool TO PUBLIC;
+
+-- Table: sf_schema.dependency
+-- DROP TABLE sf_schema.dependency;
+
+CREATE TABLE sf_schema.dependency
+(
+    id bigint NOT NULL DEFAULT nextval('sf_schema.dependency_id_seq'::regclass),
+    name text COLLATE pg_catalog."default" NOT NULL,
+    type bigint,
+    cost numeric(10,2),
+    project_id bigint,
+    date_start timestamp without time zone,
+    comment text COLLATE pg_catalog."default",
+    CONSTRAINT pk_dependency PRIMARY KEY (id),
+    CONSTRAINT fk_depend_project FOREIGN KEY (project_id)
+        REFERENCES sf_schema.project (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE sf_schema.dependency
+    OWNER to postgres;
+
+GRANT ALL ON TABLE sf_schema.dependency TO postgres;
+GRANT ALL ON TABLE sf_schema.dependency TO PUBLIC;
+
+-- Table: sf_schema.process
+-- DROP TABLE sf_schema.process;
+
+CREATE TABLE sf_schema.process
+(
+    id bigint NOT NULL DEFAULT nextval('sf_schema.process_id_seq'::regclass),
+    project_id bigint NOT NULL,
+    name text COLLATE pg_catalog."default",
+    date_start timestamp without time zone,
+    date_end timestamp without time zone,
+    comment text COLLATE pg_catalog."default",
+    CONSTRAINT pk_process PRIMARY KEY (id),
+    CONSTRAINT fk_process_project FOREIGN KEY (project_id)
+        REFERENCES sf_schema.project (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE sf_schema.process
+    OWNER to postgres;
+
+GRANT ALL ON TABLE sf_schema.process TO postgres;
+GRANT ALL ON TABLE sf_schema.process TO PUBLIC;
+
+-- Table: sf_schema.role
+-- DROP TABLE sf_schema.role;
+
+CREATE TABLE sf_schema.role
+(
+    id bigint NOT NULL DEFAULT nextval('sf_schema.role_id_seq'::regclass),
+    name text COLLATE pg_catalog."default",
+    CONSTRAINT pk_role PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE sf_schema.role
+    OWNER to postgres;
+
+GRANT ALL ON TABLE sf_schema.role TO postgres;
+GRANT ALL ON TABLE sf_schema.role TO PUBLIC;
+
+-- Table: sf_schema.skill
+-- DROP TABLE sf_schema.skill;
+
+CREATE TABLE sf_schema.skill
+(
+    id bigint NOT NULL DEFAULT nextval('sf_schema.skill_id_seq'::regclass),
+    name text COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT pk_skill PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE sf_schema.skill
+    OWNER to postgres;
+
+GRANT ALL ON TABLE sf_schema.skill TO postgres;
+GRANT ALL ON TABLE sf_schema.skill TO PUBLIC;
+
+-- Table: sf_schema.team
+-- DROP TABLE sf_schema.team;
+
+CREATE TABLE sf_schema.team
+(
+    id bigint NOT NULL DEFAULT nextval('sf_schema.team_id_seq'::regclass),
+    project_id bigint NOT NULL,
+    name character varying(100) COLLATE pg_catalog."default",
+    comment text COLLATE pg_catalog."default",
+    CONSTRAINT pk_team PRIMARY KEY (id),
+    CONSTRAINT fk_team_project FOREIGN KEY (project_id)
+        REFERENCES sf_schema.project (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)TABLESPACE pg_default;
+
+ALTER TABLE sf_schema.team
+    OWNER to postgres;
+
+GRANT ALL ON TABLE sf_schema.team TO postgres;
+GRANT ALL ON TABLE sf_schema.team TO PUBLIC;
+
+-- Table: sf_schema.contact
+-- DROP TABLE sf_schema.contact;
+
+CREATE TABLE sf_schema.contact
+(
+    id bigint NOT NULL DEFAULT nextval('sf_schema.contact_id_seq'::regclass),
+    address_ln1 text COLLATE pg_catalog."default",
+    address_ln2 text COLLATE pg_catalog."default",
+    city text COLLATE pg_catalog."default",
+    state_id bigint,
+    phone character varying(30) COLLATE pg_catalog."default",
+    email character varying(100) COLLATE pg_catalog."default",
+    prefered_contact character varying(20) COLLATE pg_catalog."default",
+    comment text COLLATE pg_catalog."default",
+    CONSTRAINT pk_contact PRIMARY KEY (id),
+    CONSTRAINT fk_contact_state FOREIGN KEY (state_id)
+        REFERENCES sf_schema.list_state (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE sf_schema.contact
+    OWNER to postgres;
+
+GRANT ALL ON TABLE sf_schema.contact TO postgres;
+GRANT ALL ON TABLE sf_schema.contact TO PUBLIC;
+
+-- Table: sf_schema.customer
+-- DROP TABLE sf_schema.customer;
+
+CREATE TABLE sf_schema.customer
+(
+    id bigint NOT NULL DEFAULT nextval('sf_schema.customer_id_seq'::regclass),
+    name text COLLATE pg_catalog."default" NOT NULL,
+    contact_id bigint,
+    comment text COLLATE pg_catalog."default",
+    CONSTRAINT pk_customer PRIMARY KEY (id),
+    CONSTRAINT fk_customer_contact FOREIGN KEY (contact_id)
+        REFERENCES sf_schema.contact (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE sf_schema.customer
+    OWNER to postgres;
+
+GRANT ALL ON TABLE sf_schema.customer TO postgres;
+GRANT ALL ON TABLE sf_schema.customer TO PUBLIC;
+
+-- Table: sf_schema.person
+-- DROP TABLE sf_schema.person;
+
+CREATE TABLE sf_schema.person
+(
+    id bigint NOT NULL DEFAULT nextval('sf_schema.person_id_seq'::regclass),
+    f_name text COLLATE pg_catalog."default",
+    m_name text COLLATE pg_catalog."default",
+    l_name text COLLATE pg_catalog."default",
+    skill bigint,
+    comment text COLLATE pg_catalog."default",
+    contact_id bigint,
+    cost numeric(10,2),
+    CONSTRAINT pk_person PRIMARY KEY (id),
+    CONSTRAINT fk_person_contact FOREIGN KEY (contact_id)
+        REFERENCES sf_schema.contact (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE sf_schema.person
+    OWNER to postgres;
+
+GRANT ALL ON TABLE sf_schema.person TO postgres;
+GRANT ALL ON TABLE sf_schema.person TO PUBLIC;
+
+-- Table: sf_schema.xref_person_role
+-- DROP TABLE sf_schema.xref_person_role;
+
+CREATE TABLE sf_schema.xref_person_role
+(
+    person_id bigint NOT NULL,
+    role_id bigint NOT NULL,
+    date_created timestamp without time zone,
+    comment text COLLATE pg_catalog."default",
+    CONSTRAINT pk_xref_person_role PRIMARY KEY (person_id, role_id),
+    CONSTRAINT fk_person FOREIGN KEY (person_id)
+        REFERENCES sf_schema.person (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_role FOREIGN KEY (role_id)
+        REFERENCES sf_schema.role (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE sf_schema.xref_person_role
+    OWNER to postgres;
+
+GRANT ALL ON TABLE sf_schema.xref_person_role TO postgres;
+GRANT ALL ON TABLE sf_schema.xref_person_role TO PUBLIC;
+
+-- Table: sf_schema.xref_person_skill
+-- DROP TABLE sf_schema.xref_person_skill;
+
+CREATE TABLE sf_schema.xref_person_skill
+(
+    person_id bigint NOT NULL,
+    skill_id bigint NOT NULL,
+    date_acquired timestamp without time zone,
+    comment text COLLATE pg_catalog."default",
+    CONSTRAINT pk_xref_person_skill PRIMARY KEY (person_id, skill_id),
+    CONSTRAINT fk_xref_person_skill FOREIGN KEY (person_id)
+        REFERENCES sf_schema.person (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_xref_skill_person FOREIGN KEY (skill_id)
+        REFERENCES sf_schema.skill (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE sf_schema.xref_person_skill
+    OWNER to postgres;
+
+GRANT ALL ON TABLE sf_schema.xref_person_skill TO PUBLIC;
+GRANT ALL ON TABLE sf_schema.xref_person_skill TO postgres;
+
+-- Table: sf_schema.xref_program_customer
+-- DROP TABLE sf_schema.xref_program_customer;
+
+CREATE TABLE sf_schema.xref_program_customer
+(
+    program_id bigint NOT NULL,
+    customer_id bigint NOT NULL,
+    funding_line numeric(10,2) NOT NULL,
+    CONSTRAINT pk_xref_program_customer PRIMARY KEY (program_id, customer_id),
+    CONSTRAINT fk_xref_customer_program FOREIGN KEY (customer_id)
+        REFERENCES sf_schema.customer (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_xref_program_customer FOREIGN KEY (program_id)
+        REFERENCES sf_schema.program (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE sf_schema.xref_program_customer
+    OWNER to postgres;
+
+GRANT ALL ON TABLE sf_schema.xref_program_customer TO PUBLIC;
+GRANT ALL ON TABLE sf_schema.xref_program_customer TO postgres;
+
+
+-- Table: sf_schema.xref_release_project
+-- DROP TABLE sf_schema.xref_release_project;
+
+CREATE TABLE sf_schema.xref_release_project
+(
+    project_id bigint NOT NULL,
+    release_id bigint NOT NULL,
+    comment text COLLATE pg_catalog."default",
+    CONSTRAINT pk_xref_release_project PRIMARY KEY (project_id, release_id),
+    CONSTRAINT fk_xref_project_release FOREIGN KEY (project_id)
+        REFERENCES sf_schema.project (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_xref_release_project FOREIGN KEY (release_id)
+        REFERENCES sf_schema.release (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE sf_schema.xref_release_project
+    OWNER to postgres;
+
+GRANT ALL ON TABLE sf_schema.xref_release_project TO PUBLIC;
+GRANT ALL ON TABLE sf_schema.xref_release_project TO postgres;
+
+-- Table: sf_schema.xref_team_person
+-- DROP TABLE sf_schema.xref_team_person;
+
+CREATE TABLE sf_schema.xref_team_person
+(
+    team_id bigint NOT NULL,
+    person_id bigint NOT NULL,
+    CONSTRAINT pk_xref_team_person PRIMARY KEY (team_id, person_id),
+    CONSTRAINT fk_person FOREIGN KEY (person_id)
+        REFERENCES sf_schema.person (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_team FOREIGN KEY (team_id)
+        REFERENCES sf_schema.team (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE sf_schema.xref_team_person
+    OWNER to postgres;
+
+GRANT ALL ON TABLE sf_schema.xref_team_person TO PUBLIC;
+GRANT ALL ON TABLE sf_schema.xref_team_person TO postgres;
+
+-- Table: sf_schema.xref_tool_project
+-- DROP TABLE sf_schema.xref_tool_project;
+
+CREATE TABLE sf_schema.xref_tool_project
+(
+    project_id bigint NOT NULL,
+    list_tool_id bigint NOT NULL,
+    date_associated timestamp without time zone,
+    CONSTRAINT pk_xref_tool_project PRIMARY KEY (project_id, list_tool_id),
+    CONSTRAINT fk_xref_list_tool_project FOREIGN KEY (list_tool_id)
+        REFERENCES sf_schema.list_tool (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_xref_project_list_tool FOREIGN KEY (project_id)
+        REFERENCES sf_schema.project (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE sf_schema.xref_tool_project
+    OWNER to postgres;
+
+GRANT ALL ON TABLE sf_schema.xref_tool_project TO PUBLIC;
+GRANT ALL ON TABLE sf_schema.xref_tool_project TO postgres;
+
+
+/***********************/
+/* default insert statements */
+/***********************/
+Insert into sf_schema.list_state(id, name) values(1, 'Alabama');
+Insert into sf_schema.list_state(id, name) values(2, 'Alaska');
+Insert into sf_schema.list_state(id, name) values(3, 'Arizona');
+Insert into sf_schema.list_state(id, name) values(4, 'Arkansas');
+Insert into sf_schema.list_state(id, name) values(5, 'California');
+Insert into sf_schema.list_state(id, name) values(6, 'Colorado');
+Insert into sf_schema.list_state(id, name) values(7, 'Connecticut');
+Insert into sf_schema.list_state(id, name) values(8, 'Delaware');
+Insert into sf_schema.list_state(id, name) values(9, 'Florida');
+Insert into sf_schema.list_state(id, name) values(10, 'Georgia');
+Insert into sf_schema.list_state(id, name) values(11, 'Hawaii');
+Insert into sf_schema.list_state(id, name) values(12, 'Idaho');
+Insert into sf_schema.list_state(id, name) values(13, 'Illinois');
+Insert into sf_schema.list_state(id, name) values(14, 'Indiana');
+Insert into sf_schema.list_state(id, name) values(15, 'Iowa');
+Insert into sf_schema.list_state(id, name) values(16, 'Kansas');
+Insert into sf_schema.list_state(id, name) values(17, 'Kentucky');
+Insert into sf_schema.list_state(id, name) values(18, 'Louisiana');
+Insert into sf_schema.list_state(id, name) values(19, 'Maine');
+Insert into sf_schema.list_state(id, name) values(20, 'Maryland');
+Insert into sf_schema.list_state(id, name) values(21, 'Massachusetts');
+Insert into sf_schema.list_state(id, name) values(22, 'Michigan');
+Insert into sf_schema.list_state(id, name) values(23, 'Minnesota');
+Insert into sf_schema.list_state(id, name) values(24, 'Mississippi');
+Insert into sf_schema.list_state(id, name) values(25, 'Missouri');
+Insert into sf_schema.list_state(id, name) values(26, 'Montana');
+Insert into sf_schema.list_state(id, name) values(27, 'Nebraska');
+Insert into sf_schema.list_state(id, name) values(28, 'Nevada');
+Insert into sf_schema.list_state(id, name) values(29, 'New Hampshire');
+Insert into sf_schema.list_state(id, name) values(30, 'New Jersey');
+Insert into sf_schema.list_state(id, name) values(31, 'New Mexico');
+Insert into sf_schema.list_state(id, name) values(32, 'New York');
+Insert into sf_schema.list_state(id, name) values(33, 'North Carolina');
+Insert into sf_schema.list_state(id, name) values(34, 'North Dakota');
+Insert into sf_schema.list_state(id, name) values(35, 'Ohio');
+Insert into sf_schema.list_state(id, name) values(36, 'Oklahoma');
+Insert into sf_schema.list_state(id, name) values(37, 'Oregon');
+Insert into sf_schema.list_state(id, name) values(38, 'Pennsylvania');
+Insert into sf_schema.list_state(id, name) values(39, 'Rhode Island');
+Insert into sf_schema.list_state(id, name) values(40, 'South Carolina');
+Insert into sf_schema.list_state(id, name) values(41, 'South Dakota');
+Insert into sf_schema.list_state(id, name) values(42, 'Tennessee');
+Insert into sf_schema.list_state(id, name) values(43, 'Texas');
+Insert into sf_schema.list_state(id, name) values(44, 'Utah');
+Insert into sf_schema.list_state(id, name) values(45, 'Vermont');
+Insert into sf_schema.list_state(id, name) values(46, 'Virginia');
+Insert into sf_schema.list_state(id, name) values(47, 'Washington');
+Insert into sf_schema.list_state(id, name) values(48, 'West Virginia');
+Insert into sf_schema.list_state(id, name) values(49, 'Wisconsin');
+Insert into sf_schema.list_state(id, name) values(50, 'Wyoming');
+
+
+Insert into sf_schema.skill(id, name) values (1, 'ProjectManager');
+Insert into sf_schema.skill(id, name) values (2, 'Architect');
+Insert into sf_schema.skill(id, name) values (3, 'ISSO');
+Insert into sf_schema.skill(id, name) values (4, 'ISSE');
+Insert into sf_schema.skill(id, name) values (5, 'BusinessAnalyst');
+Insert into sf_schema.skill(id, name) values (6, 'ScrumMaster');
+Insert into sf_schema.skill(id, name) values (7, 'Developer');
+Insert into sf_schema.skill(id, name) values (8, 'DevelopmentLead');
+
+Insert into sf_schema.list_tool(id, name) values (1, 'Jira');
+Insert into sf_schema.list_tool(id, name) values (2, 'Confluence');
+Insert into sf_schema.list_tool(id, name) values (3, 'Jenkins');
+Insert into sf_schema.list_tool(id, name) values (4, 'GitLab');
+Insert into sf_schema.list_tool(id, name) values (5, 'BitBucket');
+Insert into sf_schema.list_tool(id, name) values (6, 'Artifactory');
+Insert into sf_schema.list_tool(id, name) values (7, 'SonarQube');
+
+Insert into sf_schema.dependency(id, name) values (1, 'Maven');
+Insert into sf_schema.dependency(id, name) values (2, 'NPM');
+Insert into sf_schema.dependency(id, name) values (3, 'PyPi');
+
+Insert into sf_schema.role(id, name) values (1, 'Customer');
+Insert into sf_schema.role(id, name) values (2, 'DBA');
+Insert into sf_schema.role(id, name) values (3, 'ExecutiveManager');
+Insert into sf_schema.role(id, name) values (4, 'Owner');
+Insert into sf_schema.role(id, name) values (5, 'ProjectManager');
+Insert into sf_schema.role(id, name) values (6, 'SecurityManager');
+Insert into sf_schema.role(id, name) values (7, 'Tester');
+Insert into sf_schema.role(id, name) values (8, 'Developer');
+Insert into sf_schema.role(id, name) values (9, 'DevelopmentLead');
+Insert into sf_schema.role(id, name) values (10, 'ISSO');
+Insert into sf_schema.role(id, name) values (11, 'ISSE');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**********************/
+/* History Tables     */
+/**********************/
+
+-- Table: sf_schema.hist_program
+-- DROP TABLE sf_schema.hist_program;
+
+CREATE TABLE sf_schema.hist_program
+(
+    hist_id bigserial,
+    id bigint,
+    name text COLLATE pg_catalog."default",
+    budget numeric(10,2),
+    date_start timestamp without time zone,
+    date_end timestamp without time zone,
+    comment text COLLATE pg_catalog."default",
+    action_date timestamp without time zone, 
+    action_user character varying(30) COLLATE pg_catalog."default", 
+    action_taken character varying(20) COLLATE pg_catalog."default",
+    CONSTRAINT pk_hist_program PRIMARY KEY (hist_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE sf_schema.hist_program
+    OWNER to postgres;
+
+GRANT ALL ON TABLE sf_schema.hist_program TO postgres;
+GRANT ALL ON TABLE sf_schema.hist_program TO PUBLIC;
+
+-- Table: sf_schema.hist_project
+-- DROP TABLE sf_schema.hist_project;
+
+CREATE TABLE sf_schema.hist_project
+(
+    hist_id bigserial,
+    id bigint,
+    name text COLLATE pg_catalog."default",
+    program_id bigint,
+    date_start timestamp without time zone,
+    date_end timestamp without time zone,
+    total_cost numeric(10,2),
+    comment text COLLATE pg_catalog."default",
+    action_date timestamp without time zone, 
+    action_user character varying(30) COLLATE pg_catalog."default", 
+    action_taken character varying(20) COLLATE pg_catalog."default",
+    CONSTRAINT pk_hist_project PRIMARY KEY (hist_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE sf_schema.hist_project
+    OWNER to postgres;
+
+GRANT ALL ON TABLE sf_schema.hist_project TO postgres;
+GRANT ALL ON TABLE sf_schema.hist_project TO PUBLIC;
+
+-- Table: sf_schema.hist_release
+-- DROP TABLE sf_schema.hist_release;
+
+CREATE TABLE sf_schema.hist_release
+(
+    hist_id bigserial,
+    id bigint,
+    name text COLLATE pg_catalog."default",
+    date timestamp without time zone,
+    program_id bigint,
+    action_date timestamp without time zone, 
+    action_user character varying(30) COLLATE pg_catalog."default", 
+    action_taken character varying(20) COLLATE pg_catalog."default",
+    CONSTRAINT pk_hist_release PRIMARY KEY (hist_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE sf_schema.hist_release
+    OWNER to postgres;
+
+GRANT ALL ON TABLE sf_schema.hist_release TO postgres;
+GRANT ALL ON TABLE sf_schema.hist_release TO PUBLIC;
+
+-- Table: sf_schema.hist_list_state
+-- DROP TABLE sf_schema.hist_list_state;
+
+CREATE TABLE sf_schema.hist_list_state
+(
+    hist_id bigserial,
+    id bigint,
+    name character varying(35) COLLATE pg_catalog."default",
+    action_date timestamp without time zone, 
+    action_user character varying(30) COLLATE pg_catalog."default", 
+    action_taken character varying(20) COLLATE pg_catalog."default",
+    CONSTRAINT pk_hist_list_state PRIMARY KEY (hist_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE sf_schema.hist_list_state
+    OWNER to postgres;
+
+GRANT ALL ON TABLE sf_schema.hist_list_state TO postgres;
+GRANT ALL ON TABLE sf_schema.hist_list_state TO PUBLIC;
+
+-- Table: sf_schema.hist_list_tool
+-- DROP TABLE sf_schema.hist_list_tool;
+
+CREATE TABLE sf_schema.hist_list_tool
+(
+    hist_id bigserial,
+    id bigint,
+    name text COLLATE pg_catalog."default",
+    location text COLLATE pg_catalog."default",
+    cost numeric(10,2),
+    comment text COLLATE pg_catalog."default",
+    action_date timestamp without time zone, 
+    action_user character varying(30) COLLATE pg_catalog."default", 
+    action_taken character varying(20) COLLATE pg_catalog."default",
+    CONSTRAINT pk_hist_list_tool PRIMARY KEY (hist_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE sf_schema.hist_list_tool
+    OWNER to postgres;
+
+GRANT ALL ON TABLE sf_schema.hist_list_tool TO postgres;
+GRANT ALL ON TABLE sf_schema.hist_list_tool TO PUBLIC;
+
+-- Table: sf_schema.hist_dependency
+-- DROP TABLE sf_schema.hist_dependency;
+
+CREATE TABLE sf_schema.hist_dependency
+(
+    hist_id bigserial,
+    id bigint,
+    name text COLLATE pg_catalog."default",
+    type bigint,
+    cost numeric(10,2),
+    project_id bigint,
+    date_start timestamp without time zone,
+    comment text COLLATE pg_catalog."default",
+    action_date timestamp without time zone, 
+    action_user character varying(30) COLLATE pg_catalog."default", 
+    action_taken character varying(20) COLLATE pg_catalog."default",
+    CONSTRAINT pk_hist_dependency PRIMARY KEY (hist_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE sf_schema.hist_dependency
+    OWNER to postgres;
+
+GRANT ALL ON TABLE sf_schema.hist_dependency TO postgres;
+GRANT ALL ON TABLE sf_schema.hist_dependency TO PUBLIC;
+
+-- Table: sf_schema.hist_process
+-- DROP TABLE sf_schema.hist_process;
+
+CREATE TABLE sf_schema.hist_process
+(
+    hist_id bigserial,
+    id bigint,
+    project_id bigint,
+    name text COLLATE pg_catalog."default",
+    date_start timestamp without time zone,
+    date_end timestamp without time zone,
+    comment text COLLATE pg_catalog."default",
+    action_date timestamp without time zone, 
+    action_user character varying(30) COLLATE pg_catalog."default", 
+    action_taken character varying(20) COLLATE pg_catalog."default",
+    CONSTRAINT pk_hist_process PRIMARY KEY (hist_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE sf_schema.hist_process
+    OWNER to postgres;
+
+GRANT ALL ON TABLE sf_schema.hist_process TO postgres;
+GRANT ALL ON TABLE sf_schema.hist_process TO PUBLIC;
+
+-- Table: sf_schema.hist_role
+-- DROP TABLE sf_schema.hist_role;
+
+CREATE TABLE sf_schema.hist_role
+(
+    hist_id bigserial,
+    id bigint,
+    name text COLLATE pg_catalog."default",
+    action_date timestamp without time zone, 
+    action_user character varying(30) COLLATE pg_catalog."default", 
+    action_taken character varying(20) COLLATE pg_catalog."default",
+    CONSTRAINT pk_hist_role PRIMARY KEY (hist_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE sf_schema.hist_role
+    OWNER to postgres;
+
+GRANT ALL ON TABLE sf_schema.hist_role TO postgres;
+GRANT ALL ON TABLE sf_schema.hist_role TO PUBLIC;
+
+-- Table: sf_schema.hist_skill
+-- DROP TABLE sf_schema.hist_skill;
+
+CREATE TABLE sf_schema.hist_skill
+(
+    hist_id bigserial,
+    id bigint,
+    name text COLLATE pg_catalog."default",
+    action_date timestamp without time zone, 
+    action_user character varying(30) COLLATE pg_catalog."default", 
+    action_taken character varying(20) COLLATE pg_catalog."default",
+    CONSTRAINT pk_hist_skill PRIMARY KEY (hist_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE sf_schema.hist_skill
+    OWNER to postgres;
+
+GRANT ALL ON TABLE sf_schema.hist_skill TO postgres;
+GRANT ALL ON TABLE sf_schema.hist_skill TO PUBLIC;
+
+-- Table: sf_schema.hist_team
+-- DROP TABLE sf_schema.hist_team;
+
+CREATE TABLE sf_schema.hist_team
+(
+    hist_id bigserial,
+    id bigint,
+    project_id bigint,
+    name character varying(100) COLLATE pg_catalog."default",
+    comment text COLLATE pg_catalog."default",
+    action_date timestamp without time zone, 
+    action_user character varying(30) COLLATE pg_catalog."default", 
+    action_taken character varying(20) COLLATE pg_catalog."default",
+    CONSTRAINT pk_hist_team PRIMARY KEY (hist_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE sf_schema.hist_team
+    OWNER to postgres;
+
+GRANT ALL ON TABLE sf_schema.hist_team TO postgres;
+GRANT ALL ON TABLE sf_schema.hist_team TO PUBLIC;
+
+-- Table: sf_schema.hist_contact
+-- DROP TABLE sf_schema.hist_contact;
+
+CREATE TABLE sf_schema.hist_contact
+(
+    hist_id bigserial,
+    id bigint,
+    address_ln1 text COLLATE pg_catalog."default",
+    address_ln2 text COLLATE pg_catalog."default",
+    city text COLLATE pg_catalog."default",
+    state_id bigint,
+    phone character varying(30) COLLATE pg_catalog."default",
+    email character varying(100) COLLATE pg_catalog."default",
+    prefered_contact character varying(20) COLLATE pg_catalog."default",
+    comment text COLLATE pg_catalog."default",
+    action_date timestamp without time zone, 
+    action_user character varying(30) COLLATE pg_catalog."default", 
+    action_taken character varying(20) COLLATE pg_catalog."default",
+    CONSTRAINT pk_hist_contact PRIMARY KEY (hist_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE sf_schema.hist_contact
+    OWNER to postgres;
+
+GRANT ALL ON TABLE sf_schema.hist_contact TO postgres;
+GRANT ALL ON TABLE sf_schema.hist_contact TO PUBLIC;
+
+-- Table: sf_schema.hist_customer
+-- DROP TABLE sf_schema.hist_customer;
+
+CREATE TABLE sf_schema.hist_customer
+(
+    hist_id bigserial,
+    id bigint,
+    name text COLLATE pg_catalog."default",
+    contact_id bigint,
+    comment text COLLATE pg_catalog."default",
+    action_date timestamp without time zone, 
+    action_user character varying(30) COLLATE pg_catalog."default", 
+    action_taken character varying(20) COLLATE pg_catalog."default",
+    CONSTRAINT pk_hist_customer PRIMARY KEY (hist_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE sf_schema.hist_customer
+    OWNER to postgres;
+
+GRANT ALL ON TABLE sf_schema.hist_customer TO postgres;
+GRANT ALL ON TABLE sf_schema.hist_customer TO PUBLIC;
+
+-- Table: sf_schema.hist_person
+-- DROP TABLE sf_schema.hist_person;
+
+CREATE TABLE sf_schema.hist_person
+(
+    hist_id bigserial,
+    id bigint,
+    f_name text COLLATE pg_catalog."default",
+    m_name text COLLATE pg_catalog."default",
+    l_name text COLLATE pg_catalog."default",
+    skill bigint,
+    comment text COLLATE pg_catalog."default",
+    contact_id bigint,
+    cost numeric(10,2),
+    action_date timestamp without time zone, 
+    action_user character varying(30) COLLATE pg_catalog."default", 
+    action_taken character varying(20) COLLATE pg_catalog."default",
+    CONSTRAINT pk_hist_person PRIMARY KEY (hist_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE sf_schema.hist_person
+    OWNER to postgres;
+
+GRANT ALL ON TABLE sf_schema.hist_person TO postgres;
+GRANT ALL ON TABLE sf_schema.hist_person TO PUBLIC;
+
+-- Table: sf_schema.hist_xref_person_role
+-- DROP TABLE sf_schema.hist_xref_person_role;
+
+CREATE TABLE sf_schema.hist_xref_person_role
+(
+    hist_id bigserial,
+    person_id bigint,
+    role_id bigint,
+    date_created timestamp without time zone,
+    comment text COLLATE pg_catalog."default",
+    action_date timestamp without time zone, 
+    action_user character varying(30) COLLATE pg_catalog."default", 
+    action_taken character varying(20) COLLATE pg_catalog."default",
+    CONSTRAINT pk_hist_xref_person_role PRIMARY KEY (hist_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE sf_schema.hist_xref_person_role
+    OWNER to postgres;
+
+GRANT ALL ON TABLE sf_schema.hist_xref_person_role TO postgres;
+GRANT ALL ON TABLE sf_schema.hist_xref_person_role TO PUBLIC;
+
+-- Table: sf_schema.hist_xref_person_skill
+-- DROP TABLE sf_schema.hist_xref_person_skill;
+
+CREATE TABLE sf_schema.hist_xref_person_skill
+(
+    hist_id bigserial,
+    person_id bigint,
+    skill_id bigint,
+    date_acquired timestamp without time zone,
+    comment text COLLATE pg_catalog."default",
+    action_date timestamp without time zone, 
+    action_user character varying(30) COLLATE pg_catalog."default", 
+    action_taken character varying(20) COLLATE pg_catalog."default",
+    CONSTRAINT pk_hist_xref_person_skill PRIMARY KEY (hist_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE sf_schema.hist_xref_person_skill
+    OWNER to postgres;
+
+GRANT ALL ON TABLE sf_schema.hist_xref_person_skill TO PUBLIC;
+GRANT ALL ON TABLE sf_schema.hist_xref_person_skill TO postgres;
+
+-- Table: sf_schema.hist_xref_program_customer
+-- DROP TABLE sf_schema.hist_xref_program_customer;
+
+CREATE TABLE sf_schema.hist_xref_program_customer
+(
+    hist_id bigserial,
+    program_id bigint,
+    customer_id bigint,
+    funding_line numeric(10,2),
+    action_date timestamp without time zone, 
+    action_user character varying(30) COLLATE pg_catalog."default", 
+    action_taken character varying(20) COLLATE pg_catalog."default",
+    CONSTRAINT pk_hist_xref_program_customer PRIMARY KEY (hist_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE sf_schema.hist_xref_program_customer
+    OWNER to postgres;
+
+GRANT ALL ON TABLE sf_schema.hist_xref_program_customer TO PUBLIC;
+GRANT ALL ON TABLE sf_schema.hist_xref_program_customer TO postgres;
+
+-- Table: sf_schema.hist_xref_release_project
+-- DROP TABLE sf_schema.hist_xref_release_project;
+
+CREATE TABLE sf_schema.hist_xref_release_project
+(
+    hist_id bigserial,
+    project_id bigint,
+    release_id bigint,
+    comment text COLLATE pg_catalog."default",
+    action_date timestamp without time zone, 
+    action_user character varying(30) COLLATE pg_catalog."default", 
+    action_taken character varying(20) COLLATE pg_catalog."default",
+    CONSTRAINT pk_hist_xref_release_project PRIMARY KEY (hist_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE sf_schema.hist_xref_release_project
+    OWNER to postgres;
+
+GRANT ALL ON TABLE sf_schema.hist_xref_release_project TO PUBLIC;
+GRANT ALL ON TABLE sf_schema.hist_xref_release_project TO postgres;
+
+-- Table: sf_schema.hist_xref_team_person
+-- DROP TABLE sf_schema.hist_xref_team_person;
+
+CREATE TABLE sf_schema.hist_xref_team_person
+(
+    hist_id bigserial,
+    team_id bigint,
+    person_id bigint,
+    action_date timestamp without time zone, 
+    action_user character varying(30) COLLATE pg_catalog."default", 
+    action_taken character varying(20) COLLATE pg_catalog."default",
+    CONSTRAINT pk_hist_xref_team_person PRIMARY KEY (hist_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE sf_schema.hist_xref_team_person
+    OWNER to postgres;
+
+GRANT ALL ON TABLE sf_schema.hist_xref_team_person TO PUBLIC;
+GRANT ALL ON TABLE sf_schema.hist_xref_team_person TO postgres;
+
+-- Table: sf_schema.hist_xref_tool_project
+-- DROP TABLE sf_schema.hist_xref_tool_project;
+
+CREATE TABLE sf_schema.hist_xref_tool_project
+(
+    hist_id bigserial,
+    project_id bigint,
+    list_tool_id bigint,
+    date_associated timestamp without time zone,
+    action_date timestamp without time zone, 
+    action_user character varying(30) COLLATE pg_catalog."default", 
+    action_taken character varying(20) COLLATE pg_catalog."default",
+    CONSTRAINT pk_hist_xref_tool_project PRIMARY KEY (hist_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE sf_schema.hist_xref_tool_project
+    OWNER to postgres;
+
+GRANT ALL ON TABLE sf_schema.hist_xref_tool_project TO PUBLIC;
+GRANT ALL ON TABLE sf_schema.hist_xref_tool_project TO postgres;
+
+/****************************/
+/* History Table trigger functions */
+/***************************/
+
+/* program */
+CREATE or REPLACE FUNCTION sf_schema.tg_fn_new_program()
+	RETURNS trigger AS $$
+	DECLARE 
+    		arg_value varchar;
+	BEGIN
+    		arg_value := TG_ARGV[0];
+
+	INSERT INTO sf_schema.hist_program (id, 
+       name,
+       budget,
+       date_start,
+       date_end,
+       comment,
+       action_date, action_user, action_taken) 
+       VALUES (NEW.id, 
+       NEW.name,
+       NEW.budget,
+       NEW.date_start,
+       NEW.date_end,
+       NEW.comment,
+       NOW(), user, arg_value);
+       RETURN NEW;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE or REPLACE FUNCTION sf_schema.tg_fn_old_program()
+	RETURNS trigger AS $$
+	DECLARE 
+    		arg_value varchar;
+	BEGIN
+    		arg_value := TG_ARGV[0];
+
+	INSERT INTO sf_schema.hist_program (id, 
+       name,
+       budget,
+       date_start,
+       date_end,
+       comment,
+       action_date, action_user, action_taken) 
+       VALUES (OLD.id, 
+       OLD.name,
+       OLD.budget,
+       OLD.date_start,
+       OLD.date_end,
+       OLD.comment,
+       NOW(), user, arg_value);
+       RETURN OLD;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE TRIGGER tg_insert_program
+   BEFORE INSERT
+   ON sf_schema.program
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_new_program('INSERT');
+
+CREATE TRIGGER tg_update_program
+   BEFORE UPDATE
+   ON sf_schema.program
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_new_program('UPDATE');
+
+CREATE TRIGGER tg_delete_program
+   BEFORE DELETE
+   ON sf_schema.program
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_old_program('DELETE');
+
+/* project */
+CREATE or REPLACE FUNCTION sf_schema.tg_fn_new_project()
+	RETURNS trigger AS $$
+	DECLARE 
+    		arg_value varchar;
+	BEGIN
+    		arg_value := TG_ARGV[0];
+
+	INSERT INTO sf_schema.hist_project (id, 
+       name,
+       program_id,
+       date_start,
+       date_end,
+       total_cost,
+       comment,
+       action_date, action_user, action_taken) 
+       VALUES (NEW.id, 
+       NEW.name,
+       NEW.program_id,
+       NEW.date_start,
+       NEW.date_end,
+       NEW.total_cost,
+       NEW.comment,
+       NOW(), user, arg_value);
+       RETURN NEW;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE or REPLACE FUNCTION sf_schema.tg_fn_old_project()
+	RETURNS trigger AS $$
+	DECLARE 
+    		arg_value varchar;
+	BEGIN
+    		arg_value := TG_ARGV[0];
+
+	INSERT INTO sf_schema.hist_project (id, 
+       name,
+       program_id,
+       date_start,
+       date_end,
+       total_cost,
+       comment,
+       action_date, action_user, action_taken) 
+       VALUES (OLD.id, 
+       OLD.name,
+       OLD.program_id,
+       OLD.date_start,
+       OLD.date_end,
+       OLD.total_cost,
+       OLD.comment,
+       NOW(), user, arg_value);
+       RETURN OLD;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE TRIGGER tg_insert_project
+   BEFORE INSERT
+   ON sf_schema.project
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_new_project('INSERT');
+
+CREATE TRIGGER tg_update_project
+   BEFORE UPDATE
+   ON sf_schema.project
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_new_project('UPDATE');
+
+CREATE TRIGGER tg_delete_project
+   BEFORE DELETE
+   ON sf_schema.project
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_old_project('DELETE');
+
+/* release */
+CREATE or REPLACE FUNCTION sf_schema.tg_fn_new_release()
+	RETURNS trigger AS $$
+	DECLARE 
+    		arg_value varchar;
+	BEGIN
+    		arg_value := TG_ARGV[0];
+
+	INSERT INTO sf_schema.hist_release (id, 
+       name,
+       date,
+       program_id,
+       action_date, action_user, action_taken) 
+       VALUES (NEW.id, 
+       NEW.name,
+       NEW.date,
+       NEW.program_id,
+       NOW(), user, arg_value);
+       RETURN NEW;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE or REPLACE FUNCTION sf_schema.tg_fn_old_release()
+	RETURNS trigger AS $$
+	DECLARE 
+    		arg_value varchar;
+	BEGIN
+    		arg_value := TG_ARGV[0];
+
+	INSERT INTO sf_schema.hist_release (id, 
+       name,
+       date,
+       program_id,
+       action_date, action_user, action_taken) 
+       VALUES (OLD.id, 
+       OLD.name,
+       OLD.date,
+       OLD.program_id,
+       NOW(), user, arg_value);
+       RETURN OLD;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE TRIGGER tg_insert_release
+   BEFORE INSERT
+   ON sf_schema.release
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_new_release('INSERT');
+
+CREATE TRIGGER tg_update_release
+   BEFORE UPDATE
+   ON sf_schema.release
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_new_release('UPDATE');
+
+CREATE TRIGGER tg_delete_release
+   BEFORE DELETE
+   ON sf_schema.release
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_old_release('DELETE');
+
+/* list_state */
+CREATE or REPLACE FUNCTION sf_schema.tg_fn_new_list_state()
+	RETURNS trigger AS $$
+	DECLARE 
+    		arg_value varchar;
+	BEGIN
+    		arg_value := TG_ARGV[0];
+
+	INSERT INTO sf_schema.hist_list_state (id, 
+       name,
+       action_date, action_user, action_taken) 
+       VALUES (NEW.id, 
+       NEW.name,
+       NOW(), user, arg_value);
+       RETURN NEW;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE or REPLACE FUNCTION sf_schema.tg_fn_old_list_state()
+	RETURNS trigger AS $$
+	DECLARE 
+    		arg_value varchar;
+	BEGIN
+    		arg_value := TG_ARGV[0];
+
+	INSERT INTO sf_schema.hist_list_state (id, 
+       name,
+       action_date, action_user, action_taken) 
+       VALUES (OLD.id, 
+       OLD.name,
+       NOW(), user, arg_value);
+       RETURN OLD;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE TRIGGER tg_insert_list_state
+   BEFORE INSERT
+   ON sf_schema.list_state
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_new_list_state('INSERT');
+
+CREATE TRIGGER tg_update_list_state
+   BEFORE UPDATE
+   ON sf_schema.list_state
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_new_list_state('UPDATE');
+
+CREATE TRIGGER tg_delete_list_state
+   BEFORE DELETE
+   ON sf_schema.list_state
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_old_list_state('DELETE');
+
+/* list_tool */
+CREATE or REPLACE FUNCTION sf_schema.tg_fn_new_list_tool()
+	RETURNS trigger AS $$
+	DECLARE 
+    		arg_value varchar;
+	BEGIN
+    		arg_value := TG_ARGV[0];
+
+	INSERT INTO sf_schema.hist_list_tool (id, 
+       name,
+       location,
+       cost,
+       comment,
+       action_date, action_user, action_taken) 
+       VALUES (NEW.id, 
+       NEW.name,
+       NEW.location,
+       NEW.cost,
+       NEW.comment,
+       NOW(), user, arg_value);
+       RETURN NEW;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE or REPLACE FUNCTION sf_schema.tg_fn_old_list_tool()
+	RETURNS trigger AS $$
+	DECLARE 
+    		arg_value varchar;
+	BEGIN
+    		arg_value := TG_ARGV[0];
+
+	INSERT INTO sf_schema.hist_list_tool (id, 
+       name,
+       location,
+       cost,
+       comment,
+       action_date, action_user, action_taken) 
+       VALUES (OLD.id, 
+       OLD.name,
+       OLD.location,
+       OLD.cost,
+       OLD.comment,
+       NOW(), user, arg_value);
+       RETURN OLD;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE TRIGGER tg_insert_list_tool
+   BEFORE INSERT
+   ON sf_schema.list_tool
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_new_list_tool('INSERT');
+
+CREATE TRIGGER tg_update_list_tool
+   BEFORE UPDATE
+   ON sf_schema.list_tool
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_new_list_tool('UPDATE');
+
+CREATE TRIGGER tg_delete_list_tool
+   BEFORE DELETE
+   ON sf_schema.list_tool
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_old_list_tool('DELETE');
+
+/* dependency */
+CREATE or REPLACE FUNCTION sf_schema.tg_fn_new_dependency()
+	RETURNS trigger AS $$
+	DECLARE 
+    		arg_value varchar;
+	BEGIN
+    		arg_value := TG_ARGV[0];
+
+	INSERT INTO sf_schema.hist_dependency (id, 
+       name,
+       type,
+       cost,
+       project_id,
+       date_start,
+       comment,
+       action_date, action_user, action_taken) 
+       VALUES (NEW.id, 
+       NEW.name,
+       NEW.type,
+       NEW.cost,
+       NEW.project_id,
+       NEW.date_start,
+       NEW.comment,
+       NOW(), user, arg_value);
+       RETURN NEW;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE or REPLACE FUNCTION sf_schema.tg_fn_old_dependency()
+	RETURNS trigger AS $$
+	DECLARE 
+    		arg_value varchar;
+	BEGIN
+    		arg_value := TG_ARGV[0];
+
+	INSERT INTO sf_schema.hist_dependency (id, 
+       name,
+       type,
+       cost,
+       project_id,
+       date_start,
+       comment,
+       action_date, action_user, action_taken) 
+       VALUES (OLD.id, 
+       OLD.name,
+       OLD.type,
+       OLD.cost,
+       OLD.project_id,
+       OLD.date_start,
+       OLD.comment,
+       NOW(), user, arg_value);
+       RETURN OLD;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE TRIGGER tg_insert_dependency
+   BEFORE INSERT
+   ON sf_schema.dependency
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_new_dependency('INSERT');
+
+CREATE TRIGGER tg_update_dependency
+   BEFORE UPDATE
+   ON sf_schema.dependency
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_new_dependency('UPDATE');
+
+CREATE TRIGGER tg_delete_dependency
+   BEFORE DELETE
+   ON sf_schema.dependency
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_old_dependency('DELETE');
+
+/* process */
+CREATE or REPLACE FUNCTION sf_schema.tg_fn_new_process()
+	RETURNS trigger AS $$
+	DECLARE 
+    		arg_value varchar;
+	BEGIN
+    		arg_value := TG_ARGV[0];
+
+	INSERT INTO sf_schema.hist_process (id, 
+       project_id,
+       name,
+       date_start,
+       date_end,
+       comment,
+       action_date, action_user, action_taken) 
+       VALUES (NEW.id, 
+       NEW.project_id,
+       NEW.name,
+       NEW.date_start,
+       NEW.date_end,
+       NEW.comment,
+       NOW(), user, arg_value);
+       RETURN NEW;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE or REPLACE FUNCTION sf_schema.tg_fn_old_process()
+	RETURNS trigger AS $$
+	DECLARE 
+    		arg_value varchar;
+	BEGIN
+    		arg_value := TG_ARGV[0];
+
+	INSERT INTO sf_schema.hist_process (id, 
+       project_id,
+       name,
+       date_start,
+       date_end,
+       comment,
+       action_date, action_user, action_taken) 
+       VALUES (OLD.id, 
+       OLD.project_id,
+       OLD.name,
+       OLD.date_start,
+       OLD.date_end,
+       OLD.comment,
+       NOW(), user, arg_value);
+       RETURN OLD;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE TRIGGER tg_insert_process
+   BEFORE INSERT
+   ON sf_schema.process
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_new_process('INSERT');
+
+CREATE TRIGGER tg_update_process
+   BEFORE UPDATE
+   ON sf_schema.process
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_new_process('UPDATE');
+
+CREATE TRIGGER tg_delete_process
+   BEFORE DELETE
+   ON sf_schema.process
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_old_process('DELETE');
+
+/* role */
+CREATE or REPLACE FUNCTION sf_schema.tg_fn_new_role()
+	RETURNS trigger AS $$
+	DECLARE 
+    		arg_value varchar;
+	BEGIN
+    		arg_value := TG_ARGV[0];
+
+	INSERT INTO sf_schema.hist_role (id, 
+       name,
+       action_date, action_user, action_taken) 
+       VALUES (NEW.id, 
+       NEW.name,
+       NOW(), user, arg_value);
+       RETURN NEW;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE or REPLACE FUNCTION sf_schema.tg_fn_old_role()
+	RETURNS trigger AS $$
+	DECLARE 
+    		arg_value varchar;
+	BEGIN
+    		arg_value := TG_ARGV[0];
+
+	INSERT INTO sf_schema.hist_role (id, 
+       name,
+       action_date, action_user, action_taken) 
+       VALUES (OLD.id, 
+       OLD.name,
+       NOW(), user, arg_value);
+       RETURN OLD;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE TRIGGER tg_insert_role
+   BEFORE INSERT
+   ON sf_schema.role
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_new_role('INSERT');
+
+CREATE TRIGGER tg_update_role
+   BEFORE UPDATE
+   ON sf_schema.role
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_new_role('UPDATE');
+
+CREATE TRIGGER tg_delete_role
+   BEFORE DELETE
+   ON sf_schema.role
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_old_role('DELETE');
+
+/* skill */
+CREATE or REPLACE FUNCTION sf_schema.tg_fn_new_skill()
+	RETURNS trigger AS $$
+	DECLARE 
+    		arg_value varchar;
+	BEGIN
+    		arg_value := TG_ARGV[0];
+
+	INSERT INTO sf_schema.hist_skill (id, 
+       name,
+       action_date, action_user, action_taken) 
+       VALUES (NEW.id, 
+       NEW.name,
+       NOW(), user, arg_value);
+       RETURN NEW;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE or REPLACE FUNCTION sf_schema.tg_fn_old_skill()
+	RETURNS trigger AS $$
+	DECLARE 
+    		arg_value varchar;
+	BEGIN
+    		arg_value := TG_ARGV[0];
+
+	INSERT INTO sf_schema.hist_skill (id, 
+       name,
+       action_date, action_user, action_taken) 
+       VALUES (OLD.id, 
+       OLD.name,
+       NOW(), user, arg_value);
+       RETURN OLD;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE TRIGGER tg_insert_skill
+   BEFORE INSERT
+   ON sf_schema.skill
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_new_skill('INSERT');
+
+CREATE TRIGGER tg_update_skill
+   BEFORE UPDATE
+   ON sf_schema.skill
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_new_skill('UPDATE');
+
+CREATE TRIGGER tg_delete_skill
+   BEFORE DELETE
+   ON sf_schema.skill
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_old_skill('DELETE');
+
+/* team */
+CREATE or REPLACE FUNCTION sf_schema.tg_fn_new_team()
+	RETURNS trigger AS $$
+	DECLARE 
+    		arg_value varchar;
+	BEGIN
+    		arg_value := TG_ARGV[0];
+
+	INSERT INTO sf_schema.hist_team (id, 
+       project_id,
+       name,
+       comment,
+       action_date, action_user, action_taken) 
+       VALUES (NEW.id, 
+       NEW.project_id,
+       NEW.name,
+       NEW.comment,
+       NOW(), user, arg_value);
+       RETURN NEW;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE or REPLACE FUNCTION sf_schema.tg_fn_old_team()
+	RETURNS trigger AS $$
+	DECLARE 
+    		arg_value varchar;
+	BEGIN
+    		arg_value := TG_ARGV[0];
+
+	INSERT INTO sf_schema.hist_team (id, 
+       project_id,
+       name,
+       comment,
+       action_date, action_user, action_taken) 
+       VALUES (OLD.id, 
+       OLD.project_id,
+       OLD.name,
+       OLD.comment,
+       NOW(), user, arg_value);
+       RETURN OLD;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE TRIGGER tg_insert_team
+   BEFORE INSERT
+   ON sf_schema.team
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_new_team('INSERT');
+
+CREATE TRIGGER tg_update_team
+   BEFORE UPDATE
+   ON sf_schema.team
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_new_team('UPDATE');
+
+CREATE TRIGGER tg_delete_team
+   BEFORE DELETE
+   ON sf_schema.team
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_old_team('DELETE');
+
+/* contact */
+CREATE or REPLACE FUNCTION sf_schema.tg_fn_new_contact()
+	RETURNS trigger AS $$
+	DECLARE 
+    		arg_value varchar;
+	BEGIN
+    		arg_value := TG_ARGV[0];
+
+	INSERT INTO sf_schema.hist_contact (id, 
+       address_ln1,
+       address_ln2,
+       city,
+       state_id,
+       phone,
+       email,
+       prefered_contact,
+       comment,
+       action_date, action_user, action_taken) 
+       VALUES (NEW.id, 
+       NEW.address_ln1,
+       NEW.address_ln2,
+       NEW.city,
+       NEW.state_id,
+       NEW.phone,
+       NEW.email,
+       NEW.prefered_contact,
+       NEW.comment,
+       NOW(), user, arg_value);
+       RETURN NEW;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE or REPLACE FUNCTION sf_schema.tg_fn_old_contact()
+	RETURNS trigger AS $$
+	DECLARE 
+    		arg_value varchar;
+	BEGIN
+    		arg_value := TG_ARGV[0];
+
+	INSERT INTO sf_schema.hist_contact (id, 
+       address_ln1,
+       address_ln2,
+       city,
+       state_id,
+       phone,
+       email,
+       prefered_contact,
+       comment,
+       action_date, action_user, action_taken) 
+       VALUES (OLD.id, 
+       OLD.address_ln1,
+       OLD.address_ln2,
+       OLD.city,
+       OLD.state_id,
+       OLD.phone,
+       OLD.email,
+       OLD.prefered_contact,
+       OLD.comment,
+       NOW(), user, arg_value);
+       RETURN OLD;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE TRIGGER tg_insert_contact
+   BEFORE INSERT
+   ON sf_schema.contact
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_new_contact('INSERT');
+
+CREATE TRIGGER tg_update_contact
+   BEFORE UPDATE
+   ON sf_schema.contact
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_new_contact('UPDATE');
+
+CREATE TRIGGER tg_delete_contact
+   BEFORE DELETE
+   ON sf_schema.contact
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_old_contact('DELETE');
+
+/* customer */
+CREATE or REPLACE FUNCTION sf_schema.tg_fn_new_customer()
+	RETURNS trigger AS $$
+	DECLARE 
+    		arg_value varchar;
+	BEGIN
+    		arg_value := TG_ARGV[0];
+
+	INSERT INTO sf_schema.hist_customer (id, 
+       name,
+       contact_id,
+       comment,
+       action_date, action_user, action_taken) 
+       VALUES (NEW.id, 
+       NEW.name,
+       NEW.contact_id,
+       NEW.comment,
+       NOW(), user, arg_value);
+       RETURN NEW;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE or REPLACE FUNCTION sf_schema.tg_fn_old_customer()
+	RETURNS trigger AS $$
+	DECLARE 
+    		arg_value varchar;
+	BEGIN
+    		arg_value := TG_ARGV[0];
+
+	INSERT INTO sf_schema.hist_customer (id, 
+       name,
+       contact_id,
+       comment,
+       action_date, action_user, action_taken) 
+       VALUES (OLD.id, 
+       OLD.name,
+       OLD.contact_id,
+       OLD.comment,
+       NOW(), user, arg_value);
+       RETURN OLD;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE TRIGGER tg_insert_customer
+   BEFORE INSERT
+   ON sf_schema.customer
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_new_customer('INSERT');
+
+CREATE TRIGGER tg_update_customer
+   BEFORE UPDATE
+   ON sf_schema.customer
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_new_customer('UPDATE');
+
+CREATE TRIGGER tg_delete_customer
+   BEFORE DELETE
+   ON sf_schema.customer
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_old_customer('DELETE');
+
+/* person */
+CREATE or REPLACE FUNCTION sf_schema.tg_fn_new_person()
+	RETURNS trigger AS $$
+	DECLARE 
+    		arg_value varchar;
+	BEGIN
+    		arg_value := TG_ARGV[0];
+
+	INSERT INTO sf_schema.hist_person (id, 
+       f_name,
+       m_name,
+       l_name,
+       skill,
+       comment,
+       contact_id,
+       cost,
+       action_date, action_user, action_taken) 
+       VALUES (NEW.id, 
+       NEW.f_name,
+       NEW.m_name,
+       NEW.l_name,
+       NEW.skill,
+       NEW.comment,
+       NEW.contact_id,
+       NEW.cost,
+       NOW(), user, arg_value);
+       RETURN NEW;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE or REPLACE FUNCTION sf_schema.tg_fn_old_person()
+	RETURNS trigger AS $$
+	DECLARE 
+    		arg_value varchar;
+	BEGIN
+    		arg_value := TG_ARGV[0];
+
+	INSERT INTO sf_schema.hist_person (id, 
+       f_name,
+       m_name,
+       l_name,
+       skill,
+       comment,
+       contact_id,
+       cost,
+       action_date, action_user, action_taken) 
+       VALUES (OLD.id, 
+       OLD.f_name,
+       OLD.m_name,
+       OLD.l_name,
+       OLD.skill,
+       OLD.comment,
+       OLD.contact_id,
+       OLD.cost,
+       NOW(), user, arg_value);
+       RETURN OLD;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE TRIGGER tg_insert_person
+   BEFORE INSERT
+   ON sf_schema.person
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_new_person('INSERT');
+
+CREATE TRIGGER tg_update_person
+   BEFORE UPDATE
+   ON sf_schema.person
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_new_person('UPDATE');
+
+CREATE TRIGGER tg_delete_person
+   BEFORE DELETE
+   ON sf_schema.person
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_old_person('DELETE');
+
+/* xref_person_role */
+CREATE or REPLACE FUNCTION sf_schema.tg_fn_new_xref_person_role()
+	RETURNS trigger AS $$
+	DECLARE 
+    		arg_value varchar;
+	BEGIN
+    		arg_value := TG_ARGV[0];
+
+	INSERT INTO sf_schema.hist_xref_person_role (person_id, 
+       role_id,
+       date_created,
+       comment,
+       action_date, action_user, action_taken) 
+       VALUES (NEW.person_id, 
+       NEW.role_id,
+       NEW.date_created,
+       NEW.comment,
+       NOW(), user, arg_value);
+       RETURN NEW;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE or REPLACE FUNCTION sf_schema.tg_fn_old_xref_person_role()
+	RETURNS trigger AS $$
+	DECLARE 
+    		arg_value varchar;
+	BEGIN
+    		arg_value := TG_ARGV[0];
+
+	INSERT INTO sf_schema.hist_xref_person_role (person_id, 
+       role_id,
+       date_created,
+       comment,
+       action_date, action_user, action_taken) 
+       VALUES (OLD.person_id, 
+       OLD.role_id,
+       OLD.date_created,
+       OLD.comment,
+       NOW(), user, arg_value);
+       RETURN OLD;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE TRIGGER tg_insert_xref_person_role
+   BEFORE INSERT
+   ON sf_schema.xref_person_role
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_new_xref_person_role('INSERT');
+
+CREATE TRIGGER tg_update_xref_person_role
+   BEFORE UPDATE
+   ON sf_schema.xref_person_role
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_new_xref_person_role('UPDATE');
+
+CREATE TRIGGER tg_delete_xref_person_role
+   BEFORE DELETE
+   ON sf_schema.xref_person_role
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_old_xref_person_role('DELETE');
+
+/* xref_person_skill */
+CREATE or REPLACE FUNCTION sf_schema.tg_fn_new_xref_person_skill()
+	RETURNS trigger AS $$
+	DECLARE 
+    		arg_value varchar;
+	BEGIN
+    		arg_value := TG_ARGV[0];
+
+	INSERT INTO sf_schema.hist_xref_person_skill (person_id, 
+       skill_id,
+       date_acquired,
+       comment,
+       action_date, action_user, action_taken) 
+       VALUES (NEW.person_id, 
+       NEW.skill_id,
+       NEW.date_acquired,
+       NEW.comment,
+       NOW(), user, arg_value);
+       RETURN NEW;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE or REPLACE FUNCTION sf_schema.tg_fn_old_xref_person_skill()
+	RETURNS trigger AS $$
+	DECLARE 
+    		arg_value varchar;
+	BEGIN
+    		arg_value := TG_ARGV[0];
+
+	INSERT INTO sf_schema.hist_xref_person_skill (person_id, 
+       skill_id,
+       date_acquired,
+       comment,
+       action_date, action_user, action_taken) 
+       VALUES (OLD.person_id, 
+       OLD.skill_id,
+       OLD.date_acquired,
+       OLD.comment,
+       NOW(), user, arg_value);
+       RETURN OLD;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE TRIGGER tg_insert_xref_person_skill
+   BEFORE INSERT
+   ON sf_schema.xref_person_skill
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_new_xref_person_skill('INSERT');
+
+CREATE TRIGGER tg_update_xref_person_skill
+   BEFORE UPDATE
+   ON sf_schema.xref_person_skill
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_new_xref_person_skill('UPDATE');
+
+CREATE TRIGGER tg_delete_xref_person_skill
+   BEFORE DELETE
+   ON sf_schema.xref_person_skill
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_old_xref_person_skill('DELETE');
+
+/* xref_program_customer */
+CREATE or REPLACE FUNCTION sf_schema.tg_fn_new_xref_program_customer()
+	RETURNS trigger AS $$
+	DECLARE 
+    		arg_value varchar;
+	BEGIN
+    		arg_value := TG_ARGV[0];
+
+	INSERT INTO sf_schema.hist_xref_program_customer (program_id, 
+       customer_id,
+       funding_line,
+       action_date, action_user, action_taken) 
+       VALUES (NEW.program_id, 
+       NEW.customer_id,
+       NEW.funding_line,
+       NOW(), user, arg_value);
+       RETURN NEW;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE or REPLACE FUNCTION sf_schema.tg_fn_old_xref_program_customer()
+	RETURNS trigger AS $$
+	DECLARE 
+    		arg_value varchar;
+	BEGIN
+    		arg_value := TG_ARGV[0];
+
+	INSERT INTO sf_schema.hist_xref_program_customer (program_id, 
+       customer_id,
+       funding_line,
+       action_date, action_user, action_taken) 
+       VALUES (OLD.program_id, 
+       OLD.customer_id,
+       OLD.funding_line,
+       NOW(), user, arg_value);
+       RETURN OLD;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE TRIGGER tg_insert_xref_program_customer
+   BEFORE INSERT
+   ON sf_schema.xref_program_customer
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_new_xref_program_customer('INSERT');
+
+CREATE TRIGGER tg_update_xref_program_customer
+   BEFORE UPDATE
+   ON sf_schema.xref_program_customer
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_new_xref_program_customer('UPDATE');
+
+CREATE TRIGGER tg_delete_xref_program_customer
+   BEFORE DELETE
+   ON sf_schema.xref_program_customer
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_old_xref_program_customer('DELETE');
+
+/* xref_release_project */
+CREATE or REPLACE FUNCTION sf_schema.tg_fn_new_xref_release_project()
+	RETURNS trigger AS $$
+	DECLARE 
+    		arg_value varchar;
+	BEGIN
+    		arg_value := TG_ARGV[0];
+
+	INSERT INTO sf_schema.hist_xref_release_project (project_id, 
+       release_id,
+       comment,
+       action_date, action_user, action_taken) 
+       VALUES (NEW.project_id, 
+       NEW.release_id,
+       NEW.comment,
+       NOW(), user, arg_value);
+       RETURN NEW;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE or REPLACE FUNCTION sf_schema.tg_fn_old_xref_release_project()
+	RETURNS trigger AS $$
+	DECLARE 
+    		arg_value varchar;
+	BEGIN
+    		arg_value := TG_ARGV[0];
+
+	INSERT INTO sf_schema.hist_xref_release_project (project_id, 
+       release_id,
+       comment,
+       action_date, action_user, action_taken) 
+       VALUES (OLD.project_id, 
+       OLD.release_id,
+       OLD.comment,
+       NOW(), user, arg_value);
+       RETURN OLD;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE TRIGGER tg_insert_xref_release_project
+   BEFORE INSERT
+   ON sf_schema.xref_release_project
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_new_xref_release_project('INSERT');
+
+CREATE TRIGGER tg_update_xref_release_project
+   BEFORE UPDATE
+   ON sf_schema.xref_release_project
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_new_xref_release_project('UPDATE');
+
+CREATE TRIGGER tg_delete_xref_release_project
+   BEFORE DELETE
+   ON sf_schema.xref_release_project
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_old_xref_release_project('DELETE');
+
+/* xref_team_person */
+CREATE or REPLACE FUNCTION sf_schema.tg_fn_new_xref_team_person()
+	RETURNS trigger AS $$
+	DECLARE 
+    		arg_value varchar;
+	BEGIN
+    		arg_value := TG_ARGV[0];
+
+	INSERT INTO sf_schema.hist_xref_team_person (team_id, 
+       person_id,
+       action_date, action_user, action_taken) 
+       VALUES (NEW.team_id, 
+       NEW.person_id,
+       NOW(), user, arg_value);
+       RETURN NEW;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE or REPLACE FUNCTION sf_schema.tg_fn_old_xref_team_person()
+	RETURNS trigger AS $$
+	DECLARE 
+    		arg_value varchar;
+	BEGIN
+    		arg_value := TG_ARGV[0];
+
+	INSERT INTO sf_schema.hist_xref_team_person (team_id, 
+       person_id,
+       action_date, action_user, action_taken) 
+       VALUES (OLD.team_id, 
+       OLD.person_id,
+       NOW(), user, arg_value);
+       RETURN OLD;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE TRIGGER tg_insert_xref_team_person
+   BEFORE INSERT
+   ON sf_schema.xref_team_person
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_new_xref_team_person('INSERT');
+
+CREATE TRIGGER tg_update_xref_team_person
+   BEFORE UPDATE
+   ON sf_schema.xref_team_person
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_new_xref_team_person('UPDATE');
+
+CREATE TRIGGER tg_delete_xref_team_person
+   BEFORE DELETE
+   ON sf_schema.xref_team_person
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_old_xref_team_person('DELETE');
+
+/* xref_tool_project */
+CREATE or REPLACE FUNCTION sf_schema.tg_fn_new_xref_tool_project()
+	RETURNS trigger AS $$
+	DECLARE 
+    		arg_value varchar;
+	BEGIN
+    		arg_value := TG_ARGV[0];
+
+	INSERT INTO sf_schema.hist_xref_tool_project (project_id, 
+       list_tool_id,
+       date_associated,
+       action_date, action_user, action_taken) 
+       VALUES (NEW.project_id, 
+       NEW.list_tool_id,
+       NEW.date_associated,
+       NOW(), user, arg_value);
+       RETURN NEW;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE or REPLACE FUNCTION sf_schema.tg_fn_old_xref_tool_project()
+	RETURNS trigger AS $$
+	DECLARE 
+    		arg_value varchar;
+	BEGIN
+    		arg_value := TG_ARGV[0];
+
+	INSERT INTO sf_schema.hist_xref_tool_project (project_id, 
+       list_tool_id,
+       date_associated,
+       action_date, action_user, action_taken) 
+       VALUES (OLD.project_id, 
+       OLD.list_tool_id,
+       OLD.date_associated,
+       NOW(), user, arg_value);
+       RETURN OLD;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE TRIGGER tg_insert_xref_tool_project
+   BEFORE INSERT
+   ON sf_schema.xref_tool_project
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_new_xref_tool_project('INSERT');
+
+CREATE TRIGGER tg_update_xref_tool_project
+   BEFORE UPDATE
+   ON sf_schema.xref_tool_project
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_new_xref_tool_project('UPDATE');
+
+CREATE TRIGGER tg_delete_xref_tool_project
+   BEFORE DELETE
+   ON sf_schema.xref_tool_project
+   FOR EACH ROW
+   EXECUTE PROCEDURE sf_schema.tg_fn_old_xref_tool_project('DELETE');
+
+
